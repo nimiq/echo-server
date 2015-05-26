@@ -40,7 +40,6 @@ def send_response(client):
     headers = 'Content-Type: text/html\n' + \
               'Content-Length: %s\n' % len(body) + \
               'Connection: close\n'
-    print headers
 
     client.send('HTTP/1.1 200 OK\n')
     client.send(headers)
