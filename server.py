@@ -3,7 +3,12 @@
 """
 A simple echo server.
 
-You can test it with curl:
+Launch it with:
+$ ./server.py
+or:
+$ ./server.py xml '<?xml version="1.0" encoding="UTF-8" ?><methodResponse><params>\n<param><value><struct>\n<member><name>success</name><value><i4>1</i4></value></member>\n</struct></value></param>\n</params></methodResponse>\n\n\n'
+
+Test it with curl:
 curl http://127.0.0.1:50000/api/order/add_order/ -d "id=123456&customer=509347002&reason=whatever&description=nowayyy"
 """
 
@@ -43,11 +48,9 @@ def main():
 
 
 def send_response(client):
-    is_xml = 'xml' in sys.argv[1:]
-    body = 'This is the body of this message\n' if not is_xml else \
-           '<?xml version="1.0" encoding="UTF-8" ?><methodResponse><params>\n<param><value>' \
-           '<struct>\n<member><name>success</name><value><i4>1</i4></value></member>\n' \
-           '</struct></value></param>\n</params></methodResponse>\n\n\n'
+    is_xml = 'xml' in sys.argv[1]
+    xml_body = sys.argv[2].replace('\\n', '\n')
+    body = 'This is the body of this message\n' if not is_xml else xml_body
     headers = 'Content-Type: text/%s\n' % ('xml' if is_xml else 'plain') + \
               'Content-Length: %s\n' % len(body) + \
               'Connection: close\n'
